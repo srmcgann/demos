@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>whitehot robot live animations (w/music)</title>
+    <style>
+      body, html{
+        margin: 0;
+        background: #000;
+        color: #f00;
+        font-family: courier;
+        min-height: 100vh;
+        font-size: 24px;
+        text-align: center;
+        overflow-x: hidden;
+      }
+      #playerModal{
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000;
+        background: #000810cc;
+      }
+      #title{
+        font-size: 1em;
+        text-shadow: #0f8 0px 0px 20px;
+        color: #fff4;
+        min-width: 500px;
+        position: absolute;
+        left: 50%;
+        transform: scale(2,1) translate(-130px);
+        margin-top:20px;
+        margin-bottom:20px;
+      }
+      .span{
+        font-size: .8em;
+      }
+      .loadButton{
+        border: none;
+        border-radius: 10px;
+        font-family: courier;
+        color: #4ff;
+        background: #133;
+        min-width: 100px;
+        cursor: pointer;
+      }
+      .thumb{
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .closeButton{
+        border: none;
+        border-radius: 10px;
+        font-family: courier;
+        color: #f88;
+        margin: 10px;
+        font-size: 1em;
+        cursor: pointer;
+        background: #400;
+        min-width: 100px;
+        position: absolute;
+        z-index: 2000;
+        transform: translate(-50%);
+      }
+      #tiles{
+        margin-top: 100px;
+      }
+      .tile{
+        border: 1px solid #4f83;
+        display: inline-block;
+        margin: 10px;
+        min-height: 50px;
+        background: #40f2;
+        padding: 10px;
+      }
+      #playerFrame{
+        position: absolute;
+        display: block;
+        z-index: 1500;
+        border: none;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="title"> whitehot robot demos</div>
+    <div id="title"> whitehot robot demos</div>
+    <div id="title"> whitehot robot demos</div>
+    <div id="title"> whitehot robot demos</div>
+    <div id="title"> whitehot robot demos</div>
+    <div id="title"> whitehot robot demos</div>
+    <div id="playerModal">
+      <button class="closeButton" onclick="hidePlayerModal()">
+        close
+      </button>
+      <iframe id="playerFrame"></iframe>
+    </div>
+    <div id="tiles"></div>
+    <script>
+      demoList = [
+        "ambient_soul_salve",
+        "angels",
+        "anthropology2.0",
+        "awakening",
+        "bisection",
+        "breaking_formation",
+        "cellular_automata",
+        "collosus",
+        "crush",
+        "cube_inception",
+        "dragonfly",
+        "elves",
+        "emerge",
+        "epiphany_ts",
+        "everything_i_wanted",
+        "exist_for_love",
+        "eye",
+        "eye_of_the_storm",
+        "fade_into_you",
+        "flying_hex",
+        "forks",
+        "giant_oaks",
+        "golden_bird",
+        "golden_spiral",
+        "good_girls",
+        "grape_skittles",
+        "halogen",
+        "heavenly_conduit",
+        "hetrochromia",
+        "hip_breaker_3k",
+        "hipbreaker",
+        "hypergeometry",
+        "icosahedron",
+        "lobotomy",
+        "luckystar",
+        "magnesium",
+        "make_me_a_robot",
+        "march_of_the_cloud_people",
+        "natural_fun",
+        "next_level",
+        "ocean",
+        "omega",
+        "only_in_my_dreams",
+        "pudding",
+        "sierpenski",
+        "snowflake",
+        "sorting_hat",
+        "starship_excelsior",
+        "streamers",
+        "streets",
+        "subspace_ripples",
+        "symbols_from_beyond",
+        "text_song",
+        "the_barn_that_time_forgot",
+        "the_deepest_lake",
+        "the_physical_world",
+        "torus_inception",
+        "tree_of_knowledge",
+        "wells",
+        "wings_actual",
+        "winter_days",
+        "☺"
+  ]
+  
+  thumblist = ["ambient_soul_salve_thumb.jpg",
+    "angels_thumb.jpg",
+    "anthropology2.0_thumb.jpg",
+    "awakening_thumb.jpg",
+    "bisection_thumb.jpg",
+    "breaking_formation_thumb.jpg",
+    "cellular_automata_thumb.jpg",
+    "collosus_thumb.jpg",
+    "crush_thumb.jpg",
+    "cube_inception_thumb.jpg",
+    "dragonfly_thumb.jpg",
+    "elves_thumb.jpg",
+    "emerge_thumb.jpg",
+    "ephiphany_ts_thumb.jpg",
+    "everything_i_wanted_thumb.jpg",
+    "exist_for_love_thumb.jpg",
+    "eye_of_the_storm_thumb.jpg",
+    "eye_thumb.jpg",
+    "fade_into_you_thumb.jpg",
+    "flying_hex_thumb.jpg",
+    "forks_thumb.jpg",
+    "giant_oaks_thumb.jpg",
+    "golden_bird_thumb.jpg",
+    "golden_spiral_thumb.jpg",
+    "good_girls_thumb.jpg",
+    "grape_skittles_thumb.jpg",
+    "halogen_thumb.jpg",
+    "heavenly_conduit_thumb.jpg",
+    "heterochromia_thumb.jpg",
+    "hip_breaker_3k_thumb.jpg",
+    "hip_breaker_thumb.jpg",
+    "hypergeometry_thumb.jpg",
+    "icosahedron_thumb.jpg",
+    "lobotomy_thumb.jpg",
+    "lucky_star_thumb.jpg",
+    "magnesium_thumb.jpg",
+    "make_me_a_robot_thumb.jpg",
+    "march_of_the_cloud_people_thumb.jpg",
+    "natural_fun_thumb.jpg",
+    "next_level_thumb.jpg",
+    "ocean_thumb.jpg",
+    "omega_thumb.jpg",
+    "only_in_my_dreams_thumb.jpg",
+    "pudding_thumb.jpg",
+    "sierpenski_thumb.jpg",
+    "snowflake_thumb.jpg",
+    "sorting_hat_thumb.jpg",
+    "starship_excelsior_thumb.jpg",
+    "streamers_thumb.jpg",
+    "streets_thumb.jpg",
+    "subspace_ripples_thumb.jpg",
+    "symbols_from_beyond_thumb.jpg",
+    "text_song_thumb.jpg",
+    "the_barn_that_time_forgot_thumb.jpg",
+    "the_deepest_lake_thumb.jpg",
+    "the_physical_world_thumb.jpg",
+    "torus_inception_thumb.jpg",
+    "tree_of_knowledge_thumb.jpg",
+    "wells_thumb.jpg",
+    "wings_actual_thumb.jpg",
+    "winter_days_thumb.jpg",
+    "smiley_face_thumb.jpg"]
+      playerModal = document.querySelector('#playerModal')
+      showPlayerModal = (tgt='') => {
+        playerModal.style.display = 'block'
+        rsz___ = window.onresize = () => {
+          setTimeout(()=>{
+            playerFrame = document.querySelector('#playerFrame')
+            if(document.body.clientWidth > document.body.clientHeight*1.77777778){
+              playerFrame.style.height = '100vh'
+              setTimeout(()=>playerFrame.style.width = playerFrame.clientHeight*1.77777778+'px',0)
+            }else{
+              playerFrame.style.width = '100vw'
+              setTimeout(()=>playerFrame.style.height = playerFrame.clientWidth/1.77777778 + 'px',0)
+            }
+            playerFrame.src = tgt
+          },0)
+        }
+        rsz___()
+      }
+      hidePlayerModal = tgt => {
+        playerFrame.src = ''
+        playerModal.style.display = 'none'
+      }
+      
+      tiles = document.querySelector('#tiles')
+      demoList.map((v, i) => {
+        el = document.createElement('button')
+        el.className = 'loadButton'
+        el.innerHTML = 'launch'
+        el2 = document.createElement('div')
+        el2.className = 'tile'
+        span = document.createElement('span')
+        span.className = 'span'
+        span.innerHTML = v
+        thumb = document.createElement('img')
+        thumb.src = thumblist[i]
+        thumb.className = 'thumb'
+        el2.appendChild(span)
+        br = document.createElement('br')
+        el2.appendChild(br)
+        el2.appendChild(thumb)
+        br = document.createElement('br')
+        el2.appendChild(br)
+        el2.appendChild(el)
+        tiles.appendChild(el2)
+        thumb.onclick = el.onclick = () => {
+          showPlayerModal(v)
+        }
+      })
+    </script>
+  </body>
+</html>
